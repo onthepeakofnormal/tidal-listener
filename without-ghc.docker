@@ -1,0 +1,18 @@
+## Dockerfile for running a haskell program
+FROM       debian:stretch
+MAINTAINER Samuel Gélineau <gelisam@gmail.com>
+
+WORKDIR /root
+COPY tidal-listener.tar.gz /root/tidal-listener.tar.gz
+
+RUN tar xvf tidal-listener.tar.gz
+
+## Don't know why this is necessary..
+RUN ln -s libtinfo.so.1   /lib/x86_64-linux-gnu/libtinfo.so &&\
+    ln -s librt.so.1      /lib/x86_64-linux-gnu/librt.so &&      \
+    ln -s libutil.so.1    /lib/x86_64-linux-gnu/libutil.so &&    \
+    ln -s libdl.so.2      /lib/x86_64-linux-gnu/libdl.so &&      \
+    ln -s libpthread.so.0 /lib/x86_64-linux-gnu/libpthread.so
+
+WORKDIR /root/tidal-listener
+CMD ["./tidal-listener"]
