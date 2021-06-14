@@ -8,6 +8,7 @@ import Control.Concurrent
 import Control.Concurrent.MVar
 import qualified Network.Socket as N
 import qualified Sound.Tidal.Tempo as Tempo
+import System.Environment(getEnv)
 
 {-
 https://github.com/tidalcycles/tidal-listener/wiki
@@ -26,10 +27,13 @@ remotePort = 6012
 listen :: IO ()
 listen = do -- start Haskell interpreter, with input and output mutable variables to
             -- communicate with it
+            env <- getEnv "WITH_GHC"
+            let mode = if env /= "FALSE" then "with-ghc-mode" else "without-ghc-mode"
             (mIn, mOut) <- startHint
             -- listen
             (remote_addr:_) <- N.getAddrInfo Nothing (Just "127.0.0.1") Nothing
             local <- udpServer "127.0.0.1" listenPort
+            putStrLn $ "Starting Tidal Listener in " ++ mode
             putStrLn $ "Listening for OSC commands on port " ++ show listenPort
             putStrLn $ "Sending replies to port " ++ show remotePort
             putStrLn "Starting tidal interpreter.. "
