@@ -55,15 +55,15 @@ libs = [
 
 exts = [OverloadedStrings, NoImplicitPrelude]
 
-args:: [String]
-args = ["-clear-package-db", "-package-db", "haskell-libs/package.conf.d", "-package-db", "haskell-libs/package.db", "-v"]
+ghcArgs:: [String]
+ghcArgs = ["-clear-package-db", "-package-db", "haskell-libs/package.conf.d", "-package-db", "haskell-libs/package.db", "-v"]
 
 hintControlPattern  :: String -> IO (Either InterpreterError ControlPattern)
 hintControlPattern s = do
   env <- getEnv "WITH_GHC"
   case env of
     "FALSE" -> do
-        Hint.unsafeRunInterpreterWithArgsLibdir args "haskell-libs" $ do
+        Hint.unsafeRunInterpreterWithArgsLibdir ghcArgs "haskell-libs" $ do
               Hint.set [languageExtensions := exts]
               Hint.setImports libs
               Hint.interpret s (Hint.as :: ControlPattern)
@@ -90,7 +90,7 @@ hintLoop mIn mOut = do s <- liftIO (readMVar mIn)
 
 hintJobUnsafe :: MVar String -> MVar Response -> IO ()
 hintJobUnsafe mIn mOut =
-  do result <- catch (do Hint.unsafeRunInterpreterWithArgsLibdir args "haskell-libs" $ do
+  do result <- catch (do Hint.unsafeRunInterpreterWithArgsLibdir ghcArgs "haskell-libs" $ do
                            Hint.set [languageExtensions := exts]
                            Hint.setImports libs
                            hintLoop mIn mOut
