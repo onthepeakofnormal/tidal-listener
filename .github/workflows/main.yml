@@ -79,12 +79,12 @@ jobs:
             ghc-pkg recache
    
     - name: move executable
-      run: Copy-Item -Path 'D:\a\tidal-listener\tidal-listener\dist-newstyle\build\x86_64-windows\ghc-9.0.1\my-program-0.1.0.0\x\my-program\build\my-program\my-program.exe' -Recurse -Destination 'D:\a\tidal-listener\tidal-listener\binary\my-program.exe'
+      run: Copy-Item -Path 'D:\a\tidal-listener\tidal-listener\dist-newstyle\build\x86_64-windows\ghc-9.0.1\tidal-listener-0.1.0.0\x\tidal-listener\build\tidal-listener\tidal-listener.exe' -Recurse -Destination 'D:\a\tidal-listener\tidal-listener\binary\tidal-listener.exe'
       
     - name: zip files
       run: Compress-Archive -LiteralPath 'D:\a\tidal-listener\tidal-listener\binary\' -DestinationPath 'D:\a\tidal-listener\tidal-listener\binary.zip'
 
     - uses: actions/upload-artifact@v2
       with:
-        name: my-program
+        name: tidal-listener
         path: 'D:\a\tidal-listener\tidal-listener\binary.zip'
