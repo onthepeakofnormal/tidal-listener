@@ -54,28 +54,28 @@ jobs:
             
     - name: move GHC libs and configs
       run: |
-            Copy-Item -Path 'C:\tools\ghc-${{ matrix.ghc }}\lib\x86_64-windows-ghc-${{ matrix.ghc }}\' -Recurse -Destination 'D:\a\tidal-listener\tidal-listener\binary\libs\x86_64-windows-ghc-${{ matrix.ghc }}\'
-            Copy-Item -Path 'C:\tools\ghc-${{ matrix.ghc }}\lib\package.conf.d' -Recurse -Destination 'D:\a\tidal-listener\tidal-listener\binary\libs\package.conf.d\'
-            Copy-Item -Path 'C:\tools\ghc-${{ matrix.ghc }}\lib\llvm-passes' -Destination 'D:\a\tidal-listener\tidal-listener\binary\libs\llvm-passes'
-            Copy-Item -Path 'C:\tools\ghc-${{ matrix.ghc }}\lib\llvm-targets' -Destination 'D:\a\tidal-listener\tidal-listener\binary\libs\llvm-targets'
-            Copy-Item -Path 'C:\tools\ghc-${{ matrix.ghc }}\lib\platformConstants' -Destination 'D:\a\tidal-listener\tidal-listener\binary\libs\platformConstants'
-            Copy-Item -Path 'C:\tools\ghc-${{ matrix.ghc }}\lib\settings' -Destination 'D:\a\tidal-listener\tidal-listener\binary\libs\settings'
+            Copy-Item -Path 'C:\tools\ghc-${{ matrix.ghc }}\lib\x86_64-windows-ghc-${{ matrix.ghc }}\' -Recurse -Destination 'D:\a\tidal-listener\tidal-listener\binary\haskell-libs\x86_64-windows-ghc-${{ matrix.ghc }}\'
+            Copy-Item -Path 'C:\tools\ghc-${{ matrix.ghc }}\lib\package.conf.d' -Recurse -Destination 'D:\a\tidal-listener\tidal-listener\binary\haskell-libs\package.conf.d\'
+            Copy-Item -Path 'C:\tools\ghc-${{ matrix.ghc }}\lib\llvm-passes' -Destination 'D:\a\tidal-listener\tidal-listener\binary\haskell-libs\llvm-passes'
+            Copy-Item -Path 'C:\tools\ghc-${{ matrix.ghc }}\lib\llvm-targets' -Destination 'D:\a\tidal-listener\tidal-listener\binary\haskell-libs\llvm-targets'
+            Copy-Item -Path 'C:\tools\ghc-${{ matrix.ghc }}\lib\platformConstants' -Destination 'D:\a\tidal-listener\tidal-listener\binary\haskell-libs\platformConstants'
+            Copy-Item -Path 'C:\tools\ghc-${{ matrix.ghc }}\lib\settings' -Destination 'D:\a\tidal-listener\tidal-listener\binary\haskell-libs\settings'
             
     - name: move mingw
       run: Copy-Item -Path 'C:\tools\ghc-${{ matrix.ghc }}\mingw\' -Recurse -Destination 'D:\a\tidal-listener\tidal-listener\binary\mingw'
    
     - name: move installed packages
-      run: Copy-Item -Path 'C:\sr\ghc-${{ matrix.ghc }}\' -Recurse -Destination 'D:\a\tidal-listener\tidal-listener\binary\libs\packages'
+      run: Copy-Item -Path 'C:\sr\ghc-${{ matrix.ghc }}\' -Recurse -Destination 'D:\a\tidal-listener\tidal-listener\binary\haskell-libs\packages'
    
     - name: change paths in config files
       run: |
-            Move-Item -Path 'D:\a\tidal-listener\tidal-listener\binary\libs\packages\package.db\' -Destination 'D:\a\tidal-listener\tidal-listener\binary\libs\package.db\'
-            $configs = Get-ChildItem 'D:\a\tidal-listener\tidal-listener\binary\libs\package.db\' -Recurse
+            Move-Item -Path 'D:\a\tidal-listener\tidal-listener\binary\haskell-libs\packages\package.db\' -Destination 'D:\a\tidal-listener\tidal-listener\binary\haskell-libs\package.db\'
+            $configs = Get-ChildItem 'D:\a\tidal-listener\tidal-listener\binary\haskell-libs\package.db\' -Recurse
             $configs | %{ (gc $_) -replace "C:\\sr\\ghc-9.0.1", '${pkgroot}\packages' | Set-Content $_.fullname}
    
     - name: ghc-pkg recache
       run: | 
-            $ENV:GHC_PACKAGE_PATH="D:\a\tidal-listener\tidal-listener\binary\libs\package.conf.d;D:\a\tidal-listener\tidal-listener\binary\libs\package.db"
+            $ENV:GHC_PACKAGE_PATH="D:\a\tidal-listener\tidal-listener\binary\haskell-libs\package.conf.d;D:\a\tidal-listener\tidal-listener\binary\haskell-libs\package.db"
             ghc-pkg recache
    
     - name: move executable
