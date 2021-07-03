@@ -102,7 +102,7 @@ jobs:
             sed -i 's/cc/bin\/fake_gcc.sh/g' /home/runner/work/tidal-listener/tidal-listener/binary/haskell-libs/settings
    
     - name: move executable
-      run: cp -r dist-newstyle/build/x86_64-linux/ghc-9.0.1/my-program-0.1.0.0/x/my-program/build/my-program/my-program binary/my-program
+      run: cp -r dist-newstyle/build/x86_64-linux/ghc-9.0.1/tidal-listener-0.1.0.0/x/tidal-listener/build/tidal-listener/tidal-listener binary/tidal-listener
   
     - name: zip files
       run: |
@@ -110,5 +110,5 @@ jobs:
             tar cvfj binary.tar binary/*
     - uses: actions/upload-artifact@v2
       with:
-        name: my-program
+        name: tidal-listener
         path: /home/runner/work/tidal-listener/tidal-listener/binary.tar
