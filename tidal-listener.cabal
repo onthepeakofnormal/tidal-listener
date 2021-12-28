@@ -23,7 +23,6 @@ library
                        data-default,
                        tidal >=1.7.1,
                        hosc,
-                       unix,
                        hint,
                        network
   default-language:    Haskell2010
