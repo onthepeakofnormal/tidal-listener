@@ -1,8 +1,12 @@
+{-# LANGUAGE RecordWildCards #-}
 module Sound.Tidal.Listener where
+
+import Data.Default (def)
 
 import Sound.Tidal.Stream (Target(..))
 import qualified Sound.Tidal.Context as T
 import Sound.Tidal.Hint
+import Sound.Tidal.Listener.Config
 import Sound.OSC.FD as O
 import Control.Concurrent
 import Control.Concurrent.MVar
@@ -21,12 +25,15 @@ data State = State {sIn :: MVar String,
                     sStream :: T.Stream
                    }
 
-listenPort = 6011
-remotePort = 6012
 
+-- | Start Haskell interpreter, with input and output mutable variables to
+-- communicate with it
 listen :: IO ()
-listen = do -- start Haskell interpreter, with input and output mutable variables to
-            -- communicate with it
+listen = listenWithConfig def
+
+-- | Configurable variant of @listen@
+listenWithConfig :: ListenerConfig -> IO ()
+listenWithConfig ListenerConfig{..} = do 
             env <- getEnv "WITH_GHC"
             let mode = if env /= "FALSE" then "with-ghc-mode" else "without-ghc-mode"
             (mIn, mOut) <- startHint
