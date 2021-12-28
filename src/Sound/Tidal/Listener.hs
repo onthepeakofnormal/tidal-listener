@@ -33,7 +33,7 @@ listen = listenWithConfig def
 
 -- | Configurable variant of @listen@
 listenWithConfig :: ListenerConfig -> IO ()
-listenWithConfig ListenerConfig{..} = do 
+listenWithConfig ListenerConfig{..} = do
             env <- getEnv "WITH_GHC"
             let mode = if env /= "FALSE" then "with-ghc-mode" else "without-ghc-mode"
             (mIn, mOut) <- startHint
