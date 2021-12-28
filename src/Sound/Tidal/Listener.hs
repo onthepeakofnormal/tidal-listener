@@ -4,6 +4,7 @@ module Sound.Tidal.Listener where
 import Data.Default (def)
 
 import Sound.Tidal.Stream (Target(..))
+import Sound.Tidal.ID
 import qualified Sound.Tidal.Context as T
 import Sound.Tidal.Hint
 import Sound.Tidal.Listener.Config
@@ -81,7 +82,7 @@ getcps st = do tempo <- readMVar $ T.sTempoMV (sStream st)
 
 act :: State -> Maybe O.Message -> IO State
 act st (Just (Message "/code" [ASCII_String a_ident, ASCII_String a_code])) =
-  do let ident = ascii_to_string a_ident
+  do let ident = ID $ ascii_to_string a_ident
          code = ascii_to_string a_code
      putMVar (sIn st) code
      r <- takeMVar (sOut st)
@@ -89,9 +90,9 @@ act st (Just (Message "/code" [ASCII_String a_ident, ASCII_String a_code])) =
      return st
        where respond ident (HintOK pat) =
                do T.streamReplace (sStream st) ident pat
-                  O.sendTo (sLocal st) (O.p_message "/code/ok" [string ident]) (sRemote st)
+                  O.sendTo (sLocal st) (O.p_message "/code/ok" [string $ fromID ident]) (sRemote st)
              respond ident (HintError s) =
-               O.sendTo (sLocal st) (O.p_message "/code/error" [string ident, string s]) (sRemote st)
+               O.sendTo (sLocal st) (O.p_message "/code/error" [string $ fromID ident, string s]) (sRemote st)
 
 act st (Just (Message "/ping" [])) =
   do O.sendTo (sLocal st) (O.p_message "/pong" []) (sRemote st)
